@@ -38,7 +38,8 @@ public class SpringSecurityConfig {
         return http
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated()) // (1)
                 .formLogin(withDefaults()) // (2)
-                .httpBasic(withDefaults()) // (3)
+                .csrf().disable()
+                .httpBasic(withDefaults())// (3)
                 .build();
     }
 
