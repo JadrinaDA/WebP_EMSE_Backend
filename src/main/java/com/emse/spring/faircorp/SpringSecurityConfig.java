@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration
+//@Configuration
 public class SpringSecurityConfig {
 
     private static final String ROLE_USER = "USER";
@@ -50,6 +50,7 @@ public class SpringSecurityConfig {
                 .antMatcher("/api/**") // (2)
                 .authorizeRequests(authorize -> authorize.anyRequest().hasRole("ADMIN")) // (3)
                 .formLogin(withDefaults())
+                .csrf().disable()
                 .httpBasic(withDefaults())
                 .build();
     }

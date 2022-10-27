@@ -56,4 +56,13 @@ class WindowDaoTest {
         Assertions.assertThat(result).isEmpty();
 
     }
+
+    @Test
+    public void shouldFindWindowsbyRoomName() {
+        Room room = roomDao.getReferenceById(-10L);
+
+        List<Window> result = windowDao.findbyRoomName(room.getName());
+        Assertions.assertThat(result.size()).isEqualTo(2);
+
+    }
 }

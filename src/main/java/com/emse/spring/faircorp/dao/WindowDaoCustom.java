@@ -10,4 +10,6 @@ import java.util.List;
 public interface WindowDaoCustom {
     List<Window> findRoomOpenWindows(Long id);
     void deleteWindows(@Param("id") Long id);
+
+    List<Window> findbyRoomName(String name);
 }

@@ -56,6 +56,3 @@ public class HeaterController {
         heaterDao.deleteById(id);
     }
 }
-
-
-/*   /api/heaters/{heater_id} (DELETE) delete a heater */

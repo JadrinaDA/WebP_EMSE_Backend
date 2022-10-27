@@ -8,6 +8,7 @@ import com.emse.spring.faircorp.model.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,23 +58,53 @@ public class RoomController {
     }
 
     @PutMapping(path = "/{id}/switchWindows")
-    public RoomDto switchWindows(@PathVariable Long id) {
+    public List<WindowDto> switchWindows(@PathVariable Long id) {
         Room room = roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<WindowDto> windows = new ArrayList<>();
         for(Window window : room.getWindows())
         {
             window.setWindowStatus(window.getWindowStatus() == WindowStatus.OPEN ? WindowStatus.CLOSED : WindowStatus.OPEN);
+            windows.add(new WindowDto(window));
         }
-        return new RoomDto(room);
+
+        return windows;
     }
 
     @PutMapping(path = "/{id}/switchHeaters")
-    public RoomDto switchHeaters(@PathVariable Long id) {
+    public List<HeaterDto> switchHeaters(@PathVariable Long id) {
         Room room = roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<HeaterDto> heaterDtos = new ArrayList<>();
         for(Heater heater : room.getHeaters())
         {
             heater.setHeaterStatus(heater.getHeaterStatus() == HeaterStatus.ON ? HeaterStatus.OFF : HeaterStatus.ON);
+            heaterDtos.add(new HeaterDto(heater));
         }
-        return new RoomDto(room);
+        return heaterDtos;
+    }
+
+    @PutMapping(path = "/{id}/offHeaters")
+    public List<HeaterDto> offHeaters(@PathVariable Long id) {
+        Room room = roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<HeaterDto> heaterDtos = new ArrayList<>();
+        for(Heater heater : room.getHeaters())
+        {
+            heater.setHeaterStatus(HeaterStatus.OFF);
+            heaterDtos.add(new HeaterDto(heater));
+        }
+        return heaterDtos;
+    }
+
+    @PutMapping(path = "/{id}/closeWindows")
+    public List<WindowDto> closeWindows(@PathVariable Long id) {
+        Room room = roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<WindowDto> windows = new ArrayList<>();
+        for(Window window : room.getWindows())
+        {
+            window.setWindowStatus(WindowStatus.CLOSED);
+            windows.add(new WindowDto(window));
+        }
+
+        return windows;
     }
 
     @DeleteMapping(path = "/{id}")
