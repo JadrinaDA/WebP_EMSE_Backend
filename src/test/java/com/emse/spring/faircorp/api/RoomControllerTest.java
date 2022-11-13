@@ -151,6 +151,23 @@ class RoomControllerTest {
                 .andExpect(jsonPath("[*].heaterStatus").value(containsInAnyOrder("OFF", "OFF")));
     }
 
+    @Test
+    @WithMockUser(username = "admin", authorities = "ADMIN")
+    void shouldCloseWindows() throws Exception {
+        Room expectedRoom = createRoom("room 1");
+        Window window1 = createWindow("window 1", expectedRoom);
+        Window window2 = createWindow("window 2", expectedRoom);
+        expectedRoom.setWindows(Arrays.asList(window1, window2));
+        Assertions.assertThat(window1.getWindowStatus()).isEqualTo(WindowStatus.OPEN);
+
+        given(roomDao.findById(999L)).willReturn(Optional.of(expectedRoom));
+
+        mockMvc.perform(put("/api/rooms/999/closeWindows").accept(APPLICATION_JSON).with(SecurityMockMvcRequestPostProcessors.csrf()))
+                // check the HTTP response
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("[*].windowStatus").value(containsInAnyOrder("CLOSED", "CLOSED")));
+    }
+
     private Room createRoom(String name) {
         Building building = new Building("Building 1");
         return new Room(name, 1, building);

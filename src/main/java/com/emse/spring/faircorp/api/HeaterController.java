@@ -2,8 +2,7 @@ package com.emse.spring.faircorp.api;
 
 import com.emse.spring.faircorp.dao.HeaterDao;
 import com.emse.spring.faircorp.dao.RoomDao;
-import com.emse.spring.faircorp.model.Heater;
-import com.emse.spring.faircorp.model.Room;
+import com.emse.spring.faircorp.model.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -48,6 +47,13 @@ public class HeaterController {
         if (dto.getPower() != null){
             heater.setPower(dto.getPower());
         }
+        return new HeaterDto(heater);
+    }
+
+    @PutMapping(path = "/{id}/switch")
+    public HeaterDto switchStatus(@PathVariable Long id) {
+        Heater heater = heaterDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        heater.setHeaterStatus(heater.getHeaterStatus() == HeaterStatus.ON ? HeaterStatus.OFF: HeaterStatus.ON);
         return new HeaterDto(heater);
     }
 

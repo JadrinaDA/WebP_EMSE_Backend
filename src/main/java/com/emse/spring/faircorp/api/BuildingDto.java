@@ -19,7 +19,6 @@ public class BuildingDto {
         this.id = building.getId();
         this.name = building.getName();
         this.outsideTemperature = building.getOutsideTemperature();
-        this.roomIds = building.getRooms().stream().map(n ->n.getId()).collect(Collectors.toSet());
     }
 
     public Long getId() {
