@@ -65,7 +65,7 @@ You can also close all the windows in the building and turn off all the heaters,
 * DELETE
   * /{id} -> Deletes the building with that id and only returns status code.
 
-#### api/user -> Shows the username if you are an admin. Only works if security is on, see note below.
+#### /user -> Shows the username if you are an admin. Only works if security is on, see note below.
 
 ## Running with spring security
 To be able to use the frontend we had to turn off spring security on the cloud, to run a local version with spring security please do the following changes.
