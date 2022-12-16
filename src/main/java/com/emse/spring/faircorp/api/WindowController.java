@@ -1,10 +1,13 @@
 package com.emse.spring.faircorp.api;
 
+import com.emse.spring.faircorp.Application;
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
 import com.emse.spring.faircorp.model.Room;
 import com.emse.spring.faircorp.model.Window;
 import com.emse.spring.faircorp.model.WindowStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -19,6 +22,8 @@ public class WindowController {
 
     private final WindowDao windowDao;
     private final RoomDao roomDao;
+
+    private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
     public WindowController(WindowDao windowDao, RoomDao roomDao){
         this.windowDao = windowDao;
@@ -38,6 +43,10 @@ public class WindowController {
     @PostMapping
     public WindowDto create(@RequestBody WindowDto dto) {
         // WindowDto must always contain the window room
+        if (dto.getRoomId() == null)
+        {
+            LOGGER.error("Window must contain a room id!");
+        }
         Room room = roomDao.getReferenceById(dto.getRoomId());
         Window window = null;
         // When created the id isn't defined
@@ -60,6 +69,10 @@ public class WindowController {
 
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable Long id) {
+        if (windowDao.findById(id) == null)
+        {
+            LOGGER.fatal("That window doesn't exist.");
+        }
         windowDao.deleteById(id);
     }
 }

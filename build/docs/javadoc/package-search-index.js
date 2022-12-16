@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.emse.spring.faircorp"},{"l":"com.emse.spring.faircorp.hello"},{"l":"com.emse.spring.faircorp.model"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.emse.spring.faircorp"},{"l":"com.emse.spring.faircorp.api"},{"l":"com.emse.spring.faircorp.dao"},{"l":"com.emse.spring.faircorp.hello"},{"l":"com.emse.spring.faircorp.model"}];updateSearchResults();

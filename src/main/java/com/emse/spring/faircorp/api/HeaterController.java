@@ -1,8 +1,11 @@
 package com.emse.spring.faircorp.api;
 
+import com.emse.spring.faircorp.Application;
 import com.emse.spring.faircorp.dao.HeaterDao;
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -16,6 +19,8 @@ public class HeaterController {
 
     private final HeaterDao heaterDao;
     private final RoomDao roomDao;
+
+    private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
     public HeaterController(HeaterDao heaterDao, RoomDao roomDao)
     {
@@ -36,9 +41,17 @@ public class HeaterController {
     @PostMapping
     public HeaterDto create(@RequestBody HeaterDto dto){
         Room room = roomDao.getReferenceById(dto.getRoomId());
+        if (dto.getRoomId() == null)
+        {
+            LOGGER.error("Heater must contain a room id!");
+        }
         Heater heater = null;
         if (dto.getId() == null){
             heater = heaterDao.save(new Heater(dto.getName(), dto.getHeaterStatus(), room));
+            if (dto.getPower() == null)
+            {
+                LOGGER.warn("Initializing new heater without power.");
+            }
         }
         else {
             heater = heaterDao.getReferenceById(dto.getId());

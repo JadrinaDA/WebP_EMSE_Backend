@@ -1,10 +1,13 @@
 package com.emse.spring.faircorp.api;
 
+import com.emse.spring.faircorp.Application;
 import com.emse.spring.faircorp.dao.BuildingDao;
 import com.emse.spring.faircorp.dao.HeaterDao;
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
 import com.emse.spring.faircorp.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -21,6 +24,8 @@ public class BuildingController {
     private final WindowDao windowDao;
     private final HeaterDao heaterDao;
     private final RoomDao roomDao;
+
+    private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
     public BuildingController(BuildingDao buildingDao, WindowDao windowDao, HeaterDao heaterDao, RoomDao roomDao){
         this.buildingDao = buildingDao;
@@ -61,6 +66,7 @@ public class BuildingController {
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable Long id) {
         buildingDao.deleteById(id);
+        LOGGER.warn("Only deleted building and not things within it.");
     }
 
     @PutMapping(path = "/{id}/offHeaters")
@@ -71,6 +77,9 @@ public class BuildingController {
         {
             for(Heater heater : room.getHeaters())
             {
+                if (heater.getHeaterStatus() == HeaterStatus.ON){
+                    LOGGER.debug("There is at least one heater that should be turned off.");
+                }
                 heater.setHeaterStatus(HeaterStatus.OFF);
                 heaterDtos.add(new HeaterDto(heater));
             }

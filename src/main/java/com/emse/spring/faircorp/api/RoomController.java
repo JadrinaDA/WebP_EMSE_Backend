@@ -1,10 +1,13 @@
 package com.emse.spring.faircorp.api;
 
+import com.emse.spring.faircorp.Application;
 import com.emse.spring.faircorp.dao.BuildingDao;
 import com.emse.spring.faircorp.dao.HeaterDao;
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
 import com.emse.spring.faircorp.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -21,6 +24,8 @@ public class RoomController {
     private final BuildingDao buildingDao;
     private final WindowDao windowDao;
     private final HeaterDao heaterDao;
+
+    private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
     public RoomController(RoomDao roomDao, BuildingDao buildingDao, WindowDao windowDao, HeaterDao heaterDao) {
         this.roomDao = roomDao;
@@ -88,6 +93,10 @@ public class RoomController {
         List<HeaterDto> heaterDtos = new ArrayList<>();
         for(Heater heater : room.getHeaters())
         {
+            if (heater.getHeaterStatus() == HeaterStatus.ON)
+            {
+                LOGGER.info("Turning off a heater.");
+            }
             heater.setHeaterStatus(HeaterStatus.OFF);
             heaterDtos.add(new HeaterDto(heater));
         }
@@ -100,6 +109,10 @@ public class RoomController {
         List<WindowDto> windows = new ArrayList<>();
         for(Window window : room.getWindows())
         {
+            if (window.getWindowStatus() == WindowStatus.OPEN)
+            {
+                LOGGER.info("Closing a window.");
+            }
             window.setWindowStatus(WindowStatus.CLOSED);
             windows.add(new WindowDto(window));
         }
@@ -109,6 +122,10 @@ public class RoomController {
 
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable Long id) {
+        if (roomDao.findById(id) == null)
+        {
+            LOGGER.fatal("That room doesn't exist.");
+        }
         windowDao.deleteWindows(id);
         heaterDao.deleteByRoom(id);
         roomDao.deleteById(id);
