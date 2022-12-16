@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/rooms")
 @Transactional
+@CrossOrigin
 public class RoomController {
     private final RoomDao roomDao;
     private final BuildingDao buildingDao;
