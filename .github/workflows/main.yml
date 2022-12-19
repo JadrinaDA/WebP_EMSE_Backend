@@ -8,17 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Changelog
-      uses: Bullrich/generate-release-changelog@master
-      id: Changelog
-      env:
-        REPO: ${{ github.repository }}
-    - name: Create a Release
-      uses: elgohr/Github-Release-Action@v4
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        title: MyReleaseMessage
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
         files: |
-            build/docs/javadocs/*
-            *.jar
+          build/docs/javadocs
+          *.jar
