@@ -13,5 +13,5 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
         files: |
-          build/docs/javadocs
-          *.jar
+          build/libs/faircorp-0.0.1-SNAPSHOT-javadoc.jar
+          build/libs/faircorp-0.0.1-SNAPSHOT-sources.jar
